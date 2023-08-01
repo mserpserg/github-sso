@@ -48,7 +48,7 @@ if (!isset($_COOKIE['access_token']) && isset($_GET['code'])) {
     // Getting information about a user
     if (isset($tokenInfo['access_token'])) {
         $parameters['access_token'] = $tokenInfo['access_token'];
-        //setcookie('access_token', $tokenInfo['access_token'], time() + 3600);
+        setcookie('access_token', $tokenInfo['access_token'], time() + 3600);
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, GITHUB_USER_INFO_URI);
@@ -68,7 +68,9 @@ if (!isset($_COOKIE['access_token']) && isset($_GET['code'])) {
     }
 
     if ($result) {
-        print_r($userInfo);
+        //print_r($userInfo);
+        header('Location: http://serg.razumno.com/logout.php');
+        exit;
     }
 }
 
