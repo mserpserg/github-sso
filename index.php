@@ -41,34 +41,34 @@ if (!isset($_COOKIE['access_token']) && isset($_GET['code'])) {
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($curl, CURLOPT_HEADER, false);
-    $data = curl_exec($curl);
+    $result = curl_exec($curl);
     curl_close($curl);    
-    parse_str($data, $data);
+    parse_str($result, $tokenInfo);
 
     // Getting information about a user
-    if (isset($data['access_token'])) {
-        $parameters['access_token'] = $data['access_token'];
-        //setcookie('access_token', $data['access_token'], time() + 3600);
+    if (isset($tokenInfo['access_token'])) {
+        $parameters['access_token'] = $tokenInfo['access_token'];
+        //setcookie('access_token', $tokenInfo['access_token'], time() + 3600);
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, GITHUB_USER_INFO_URI);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: token ' . $data['access_token']));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: token ' . $tokenInfo['access_token']));
         curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        $info = curl_exec($curl);
+        $result = curl_exec($curl);
         curl_close($curl);
-        $info = json_decode($info, true);
+        $userInfo = json_decode($result, true);
 
-        if (isset($info['id'])) {
-            $info = $info;
+        if (isset($userInfo['id'])) {
+            $userInfo = $userInfo;
             $result = true;
         }
     }
 
     if ($result) {
-        print_r($info);
+        print_r($userInfo);
     }
 }
 
